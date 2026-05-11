@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auraone-sdk"
-version = "0.1.0"
+version = "0.1.1"
 description = "Official Python SDK and CLI for the AuraOne hosted API."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -38,5 +38,6 @@ Documentation = "https://www.auraone.ai/resources/docs"
 Source = "https://github.com/auraoneai/sdk-python"
 Issues = "https://github.com/auraoneai/sdk-python/issues"
 
-[tool.setuptools]
-packages = ["aura_one", "aura"]
+[tool.setuptools.packages.find]
+include = ["aura*", "aura_one*"]
+exclude = ["tests*"]

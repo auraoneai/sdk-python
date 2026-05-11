@@ -2,6 +2,12 @@
 
 All notable changes to `auraone-sdk` are documented here. This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-05-11
+
+### Fixed
+
+- Packaging: the 0.1.0 wheel only included the top-level `aura` and `aura_one` packages because `[tool.setuptools].packages` was an explicit list. Subpackages `aura_one.services`, `aura.operators`, and `aura.plugins` were missing, breaking `from aura_one import ...` on a fresh install. 0.1.1 switches to `setuptools.packages.find` to include all subpackages.
+
 ## [0.1.0] - 2026-05-11
 
 Initial public release of the AuraOne Python SDK.
