@@ -2,6 +2,20 @@
 
 All notable changes to `auraone-sdk` are documented here. This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2026-07-07
+
+### Changed
+
+- Reworked the README around install, quickstart, concrete API examples, compatibility notes, and public project links.
+- Expanded PyPI package metadata with a developer-facing description, search keywords, classifiers, changelog, and security links.
+- Pruned tests and local macOS metadata from source distributions.
+- Added test and Twine validation gates before trusted PyPI publishing.
+
+### Fixed
+
+- Aligned public SDK version surfaces with the package version.
+- Corrected the security policy scope for the Python SDK.
+
 ## [0.1.1] - 2026-05-11
 
 ### Fixed

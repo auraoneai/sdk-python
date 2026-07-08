@@ -2,7 +2,7 @@
 
 ## Scope
 
-This policy covers the `@auraone/sdk` TypeScript SDK source published in this repository.
+This policy covers the `auraone-sdk` Python SDK and `aura` CLI source published in this repository.
 
 The hosted AuraOne backend at `api.auraone.ai` is out of scope for this repository. Backend security reports should be sent to `security@auraone.ai`.
 

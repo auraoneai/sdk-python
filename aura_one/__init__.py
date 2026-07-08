@@ -57,9 +57,9 @@ from .types import (
     EventCategory,
     TrainingFormat,
 )
+from .version import __version__
 
 # Version info
-__version__ = "1.0.0"
 __api_version__ = "1.0"
 __author__ = "AuraOne Team"
 __email__ = "support@auraone.ai"
@@ -241,4 +241,5 @@ __all__ = [
 
     # Constants
     "DEFAULT_CONFIG",
+    "__version__",
 ]
