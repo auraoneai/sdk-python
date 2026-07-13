@@ -4,39 +4,43 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auraone-sdk"
-version = "0.1.2"
-description = "Python SDK and CLI for running AuraOne hosted AI evaluations, analytics, training exports, and governance workflows."
+version = "0.2.0"
+description = "Python SDK and CLI for AuraOne hosted AI evaluations, with sync and async clients for templates, runs, analytics, training, and governance."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "AuraOne" }]
 keywords = [
   "auraone",
-  "python-sdk",
-  "cli",
   "ai-evaluation",
+  "evaluation-api",
+  "hosted-evaluation",
+  "python-sdk",
+  "async-client",
+  "command-line-interface",
   "model-evaluation",
   "agent-evaluation",
   "llm-evaluation",
-  "analytics",
-  "training-data",
-  "human-feedback",
-  "governance",
-  "robotics",
-  "graphql",
+  "ai-governance",
+  "graphql-client",
 ]
 classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Framework :: AsyncIO",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "Operating System :: OS Independent",
-  "Intended Audience :: Developers",
-  "Environment :: Console",
   "Topic :: Internet :: WWW/HTTP",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Software Development :: Quality Assurance",
 ]
 dependencies = [
   "httpx>=0.27.0",
@@ -48,6 +52,7 @@ dev = [
   "pytest>=7.0",
   "pytest-asyncio>=0.23.0",
   "build>=1.0",
+  "twine>=5.0",
   "tomli>=2.0; python_version < '3.11'",
 ]
 
@@ -61,6 +66,11 @@ Source = "https://github.com/auraoneai/sdk-python"
 Issues = "https://github.com/auraoneai/sdk-python/issues"
 Changelog = "https://github.com/auraoneai/sdk-python/blob/main/CHANGELOG.md"
 Security = "https://github.com/auraoneai/sdk-python/blob/main/SECURITY.md"
+CI = "https://github.com/auraoneai/sdk-python/actions/workflows/ci.yml"
+PyPI = "https://pypi.org/project/auraone-sdk/"
+Releases = "https://github.com/auraoneai/sdk-python/releases"
+"TypeScript SDK" = "https://www.npmjs.com/package/@auraone/sdk"
+"Local EvalKit" = "https://pypi.org/project/auraone-evalkit/"
 
 [tool.setuptools.packages.find]
 include = ["aura*", "aura_one*"]

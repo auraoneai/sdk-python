@@ -27,6 +27,22 @@ pip install -e ".[dev]"
 pytest -q tests
 ```
 
+## Release preflight
+
+Release preparation is intentionally separate from publishing. Update `pyproject.toml`, `aura_one/version.py`, and `CHANGELOG.md` to the same semantic version, then run:
+
+```bash
+version="$(python -c 'import aura_one; print(aura_one.__version__)')"
+python scripts/release_preflight.py --expected-version "$version"
+pytest -q tests
+rm -rf build dist
+python -m build
+python -m twine check --strict dist/*
+python scripts/release_preflight.py --expected-version "$version" --dist dist
+```
+
+Do not upload from a workstation. A matching `vX.Y.Z` tag triggers GitHub Actions, which rebuilds and verifies the distributions before publishing through PyPI trusted publishing. A manual workflow dispatch performs the same build-only validation unless its `publish` input is explicitly enabled and approved through the `pypi` environment.
+
 ## Pull request expectations
 
 - Keep changes focused.

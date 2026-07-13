@@ -2,6 +2,19 @@
 
 All notable changes to `auraone-sdk` are documented here. This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-07-12
+
+### Added
+
+- Added stable `table`, `json`, and `jsonl` CLI output formats for hosted evaluation workflows.
+- Added `NO_COLOR` and `--no-color` support, environment-based CLI configuration, actionable error messages, and documented exit codes.
+- Added source and distribution release preflight checks plus post-publish PyPI verification.
+
+### Changed
+
+- Rebuilt the PyPI trusted-publishing workflow around separately verified immutable artifacts and a clean-install verification job.
+- Updated the CLI's default API endpoint to the hosted AuraOne API while preserving `--base-url` and `AURAONE_BASE_URL` overrides.
+
 ## [0.1.2] - 2026-07-07
 
 ### Changed
