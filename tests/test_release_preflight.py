@@ -33,4 +33,4 @@ def test_release_preflight_rejects_mismatched_release_version() -> None:
     result = _run("--expected-version", "9.9.9")
 
     assert result.returncode == 1
-    assert "expected=9.9.9, package=0.2.0" in result.stderr
+    assert "expected=9.9.9, package=0.2.1" in result.stderr

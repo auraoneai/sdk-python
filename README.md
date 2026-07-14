@@ -155,7 +155,10 @@ aura quotas
 aura system-health
 ```
 
-The structured output and stable exit-code examples below describe the current `0.2.0` source candidate. Check `aura --version` and the [PyPI release page](https://pypi.org/project/auraone-sdk/) before depending on a flag in an installed release.
+The structured output and stable exit-code examples below describe the current
+`0.2.1` release. Check `aura --version` and the
+[PyPI release page](https://pypi.org/project/auraone-sdk/) before depending on a
+flag in an installed environment.
 
 ```bash
 aura list-templates --domain robotics --output json
@@ -249,7 +252,7 @@ Treat the documented fields for the endpoint you call as the contract. Do not as
 
 ### CLI
 
-For the current `0.2.0` source candidate:
+For the current `0.2.1` release:
 
 - `table` is the interactive default.
 - `json` writes one JSON document to stdout.
@@ -280,15 +283,17 @@ Machine-readable errors use this stderr shape:
 
 ## Source And Release Proof
 
-Publication status checked on **July 13, 2026**:
+Release destinations for `0.2.1`:
 
 | Surface | Version | Proof |
 | --- | --- | --- |
-| Published Python distribution | `0.1.2` | [PyPI release and files](https://pypi.org/project/auraone-sdk/0.1.2/#files), uploaded July 8, 2026 |
-| Public source tag | `v0.1.2` | [GitHub tagged source](https://github.com/auraoneai/sdk-python/tree/v0.1.2) |
-| Current repository source | `0.2.0` | `pyproject.toml`, `aura_one/version.py`, and `CHANGELOG.md` in this checkout |
+| Python distribution | `0.2.1` | [PyPI release and files](https://pypi.org/project/auraone-sdk/0.2.1/#files) |
+| Public source tag | `v0.2.1` | [GitHub tagged source](https://github.com/auraoneai/sdk-python/tree/v0.2.1) |
+| Current repository source | `0.2.1` | `pyproject.toml`, `aura_one/version.py`, and `CHANGELOG.md` in this checkout |
 
-`0.2.0` was not published on July 13, 2026. At that check date, PyPI had no `auraone-sdk==0.2.0` release and the public repository had no `v0.2.0` tag. A version present in source is release-candidate evidence, not registry availability. Use the linked PyPI page for current registry status.
+Treat the release as complete only when the PyPI project, immutable Git tag,
+GitHub Release, and installed `aura --version` all resolve to `0.2.1`. A version
+present only in source or a changelog is not registry availability.
 
 Maintainers can reproduce the source and distribution checks without publishing:
 
