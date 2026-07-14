@@ -112,4 +112,7 @@ def test_readme_covers_package_page_decision_and_release_contracts() -> None:
         assert marker in readme
 
     assert f"| Current repository source | `{project['version']}` |" in readme
-    assert f"`{project['version']}` was not published on July 13, 2026." in readme
+    assert f"| Python distribution | `{project['version']}` |" in readme
+    assert f"| Public source tag | `v{project['version']}` |" in readme
+    assert "was not published" not in readme
+    assert "source candidate" not in readme

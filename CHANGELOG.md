@@ -2,6 +2,16 @@
 
 All notable changes to `auraone-sdk` are documented here. This project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-07-13
+
+### Fixed
+
+- Corrected the PyPI long description and release-proof section so the package
+  page identifies the published SDK instead of retaining pre-publication
+  `0.2.0` candidate language.
+- Updated package, module, CLI, test, and release-preflight version surfaces for
+  the metadata-only patch release.
+
 ## [0.2.0] - 2026-07-12
 
 ### Added
