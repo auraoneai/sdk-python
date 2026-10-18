@@ -26,7 +26,7 @@ from aura_one.exceptions import (
     TimeoutError as AuraTimeoutError,
     ValidationError,
 )
-from aura_one.version import __version__
+from aura_one.version import VERSION, __version__
 
 from .client import AuraClient
 
@@ -55,7 +55,11 @@ def _env(name: str, default: Optional[str] = None) -> Optional[str]:
     return value if value not in (None, "") else default
 
 
-def _add_output_options(parser: argparse.ArgumentParser, *, suppress_defaults: bool = False) -> None:
+def _add_output_options(
+    parser: argparse.ArgumentParser,
+    *,
+    suppress_defaults: bool = False,
+) -> None:
     default: Any = argparse.SUPPRESS if suppress_defaults else "table"
     parser.add_argument(
         "-o",
@@ -77,7 +81,11 @@ def build_parser() -> argparse.ArgumentParser:
         prog="aura",
         description="Run hosted AuraOne evaluations and inspect account status.",
     )
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
     parser.add_argument(
         "--base-url",
         default=_env("AURAONE_BASE_URL", "https://api.auraone.ai"),
@@ -85,8 +93,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--org-id",
-        default=_env("AURAONE_ORG_ID", "public"),
-        help="organization ID (env: AURAONE_ORG_ID)",
+        default=_env("AURAONE_ORG_ID"),
+        help="organization ID assertion (env: AURAONE_ORG_ID)",
     )
     parser.add_argument(
         "--api-key",
@@ -100,7 +108,12 @@ def build_parser() -> argparse.ArgumentParser:
     templates = sub.add_parser("list-templates", help="list evaluation templates")
     templates.add_argument("--domain", help="filter templates by domain")
     templates.add_argument("--page", type=int, default=1, help="page number (default: 1)")
-    templates.add_argument("--per-page", type=int, default=20, help="results per page (default: 20)")
+    templates.add_argument(
+        "--per-page",
+        type=int,
+        default=20,
+        help="results per page (default: 20)",
+    )
     _add_output_options(templates, suppress_defaults=True)
 
     quotas = sub.add_parser("quotas", help="show organization quotas")
@@ -111,8 +124,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     evaluate = sub.add_parser("evaluate", help="create an evaluation")
     evaluate.add_argument("--template-id", required=True, help="template identifier")
-    evaluate.add_argument("--agent-bundle-url", required=True, help="URL of the agent bundle")
-    evaluate.add_argument("--wait", action="store_true", default=False, help="wait for a terminal result")
+    evaluate.add_argument(
+        "--agent-bundle-url",
+        required=True,
+        help="URL of the agent bundle",
+    )
+    evaluate.add_argument(
+        "--wait",
+        action="store_true",
+        default=False,
+        help="wait for a terminal result",
+    )
     evaluate.add_argument(
         "--robust",
         action="store_true",
@@ -138,7 +160,10 @@ class CliUsageError(ValueError):
 
 def _json_value(value: Any) -> Any:
     if dataclasses.is_dataclass(value) and not isinstance(value, type):
-        return {field.name: _json_value(getattr(value, field.name)) for field in dataclasses.fields(value)}
+        return {
+            field.name: _json_value(getattr(value, field.name))
+            for field in dataclasses.fields(value)
+        }
     if isinstance(value, Enum):
         return value.value
     if isinstance(value, Mapping):
@@ -201,7 +226,10 @@ def _render_table(payload: Any, *, color: bool) -> str:
     max_column_width = max(8, available // max(1, len(columns)))
     widths = {
         column: min(
-            max(len(column), max(len(_display_value(row.get(column))) for row in rows)),
+            max(
+                len(column),
+                max(len(_display_value(row.get(column))) for row in rows),
+            ),
             max_column_width,
         )
         for column in columns
@@ -213,7 +241,9 @@ def _render_table(payload: Any, *, color: bool) -> str:
     separator = "  ".join("-" * widths[column] for column in columns)
     body = [
         "  ".join(
-            _truncate(_display_value(row.get(column)), widths[column]).ljust(widths[column])
+            _truncate(_display_value(row.get(column)), widths[column]).ljust(
+                widths[column]
+            )
             for column in columns
         ).rstrip()
         for row in rows
@@ -227,7 +257,9 @@ def _emit(payload: Any, output: str, *, color: bool) -> None:
         print(json.dumps(normalized, indent=2, sort_keys=True))
         return
     if output == "jsonl":
-        records: Iterable[Any] = normalized if isinstance(normalized, list) else [normalized]
+        records: Iterable[Any] = (
+            normalized if isinstance(normalized, list) else [normalized]
+        )
         for record in records:
             print(json.dumps(record, sort_keys=True, separators=(",", ":")))
         return
@@ -256,8 +288,15 @@ def _error_contract(exc: BaseException) -> tuple[int, str, str, Optional[str]]:
     message = str(exc).strip() or exc.__class__.__name__
 
     if isinstance(exc, CliUsageError):
-        return EXIT_USAGE, "usage_error", message, "Run 'aura --help' to review valid options."
-    if isinstance(exc, AuthenticationError) or status == 401:
+        return (
+            EXIT_USAGE,
+            "usage_error",
+            message,
+            "Run 'aura --help' to review valid options.",
+        )
+    if isinstance(exc, AuthenticationError) or status == 401 or (
+        isinstance(exc, ValueError) and "requires an API key" in message
+    ):
         return (
             EXIT_AUTHENTICATION,
             "authentication_error",
@@ -272,14 +311,33 @@ def _error_contract(exc: BaseException) -> tuple[int, str, str, Optional[str]]:
             "Confirm the API key has access to this organization and operation.",
         )
     if isinstance(exc, NotFoundError) or status == 404:
-        return EXIT_NOT_FOUND, "not_found", message, "Check the resource identifier and --base-url."
+        return (
+            EXIT_NOT_FOUND,
+            "not_found",
+            message,
+            "Check the resource identifier and --base-url.",
+        )
     if isinstance(exc, ConflictError) or status == 409:
-        return EXIT_CONFLICT, "conflict", message, "Refresh the resource state before retrying."
+        return (
+            EXIT_CONFLICT,
+            "conflict",
+            message,
+            "Refresh the resource state before retrying.",
+        )
     if isinstance(exc, ValidationError) or status in (400, 422):
-        return EXIT_VALIDATION, "validation_error", message, "Check the command arguments and resource values."
+        return (
+            EXIT_VALIDATION,
+            "validation_error",
+            message,
+            "Check the command arguments and resource values.",
+        )
     if isinstance(exc, RateLimitError) or status == 429:
         retry_after = getattr(exc, "retry_after", None)
-        hint = f"Retry after {retry_after} seconds." if retry_after else "Wait briefly, then retry the request."
+        hint = (
+            f"Retry after {retry_after} seconds."
+            if retry_after
+            else "Wait briefly, then retry the request."
+        )
         return EXIT_RATE_LIMIT, "rate_limit_error", message, hint
     if isinstance(
         exc,
@@ -297,9 +355,21 @@ def _error_contract(exc: BaseException) -> tuple[int, str, str, Optional[str]]:
             message,
             "Check connectivity and --base-url, then retry.",
         )
-    if isinstance(exc, (ServerError, AuraOneError, httpx.HTTPError)) or (status and status >= 500):
-        return EXIT_API, "api_error", message, "The AuraOne API did not complete the request; retry or check service health."
-    return EXIT_UNEXPECTED, "unexpected_error", message, "Retry with valid inputs; report the error if it persists."
+    if isinstance(exc, (ServerError, AuraOneError, httpx.HTTPError)) or (
+        status and status >= 500
+    ):
+        return (
+            EXIT_API,
+            "api_error",
+            message,
+            "The AuraOne API did not complete the request; retry or check service health.",
+        )
+    return (
+        EXIT_UNEXPECTED,
+        "unexpected_error",
+        message,
+        "Retry with valid inputs; report the error if it persists.",
+    )
 
 
 def _emit_error(exc: BaseException, args: argparse.Namespace) -> int:
@@ -315,10 +385,15 @@ def _emit_error(exc: BaseException, args: argparse.Namespace) -> int:
     }
 
     if args.output in ("json", "jsonl"):
-        print(json.dumps(payload, sort_keys=True, separators=(",", ":")), file=sys.stderr)
+        print(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")),
+            file=sys.stderr,
+        )
     else:
         color = _use_color(args, sys.stderr)
-        label = f"{_ANSI_RED}{_ANSI_BOLD}Error:{_ANSI_RESET}" if color else "Error:"
+        label = (
+            f"{_ANSI_RED}{_ANSI_BOLD}Error:{_ANSI_RESET}" if color else "Error:"
+        )
         print(f"{label} {message}", file=sys.stderr)
         if hint:
             print(f"Hint: {hint}", file=sys.stderr)
@@ -327,9 +402,15 @@ def _emit_error(exc: BaseException, args: argparse.Namespace) -> int:
 
 def _run_command(args: argparse.Namespace, client: AuraClient) -> Any:
     if args.cmd == "list-templates":
-        return client.list_templates(domain=args.domain, page=args.page, per_page=args.per_page)
+        return client.list_templates(
+            domain=args.domain,
+            page=args.page,
+            per_page=args.per_page,
+        )
     if args.cmd == "evaluate":
-        evaluate: Callable[..., Any] = client.evaluate_robust if args.robust else client.evaluate
+        evaluate: Callable[..., Any] = (
+            client.evaluate_robust if args.robust else client.evaluate
+        )
         return evaluate(
             template_id=args.template_id,
             agent_bundle_url=args.agent_bundle_url,
@@ -347,14 +428,18 @@ def run_cli(argv: Sequence[str]) -> int:
     client: Optional[AuraClient] = None
     try:
         _validate_args(args)
-        client = AuraClient(api_key=args.api_key, base_url=args.base_url, org_id=args.org_id)
+        client = AuraClient(
+            api_key=args.api_key,
+            base_url=args.base_url,
+            org_id=args.org_id,
+        )
         payload = _run_command(args, client)
         _emit(payload, args.output, color=_use_color(args, sys.stdout))
         return EXIT_OK
     except KeyboardInterrupt:
         print("Error: operation cancelled", file=sys.stderr)
         return EXIT_INTERRUPTED
-    except Exception as exc:  # The CLI converts SDK and transport failures to stable exits.
+    except Exception as exc:
         return _emit_error(exc, args)
     finally:
         if client is not None:
@@ -365,3 +450,26 @@ def run_cli(argv: Sequence[str]) -> int:
 
 def main() -> None:
     sys.exit(run_cli(sys.argv[1:]))
+
+
+__all__ = [
+    "VERSION",
+    "__version__",
+    "EXIT_OK",
+    "EXIT_UNEXPECTED",
+    "EXIT_USAGE",
+    "EXIT_AUTHENTICATION",
+    "EXIT_AUTHORIZATION",
+    "EXIT_NOT_FOUND",
+    "EXIT_CONFLICT",
+    "EXIT_VALIDATION",
+    "EXIT_RATE_LIMIT",
+    "EXIT_NETWORK",
+    "EXIT_API",
+    "EXIT_INTERRUPTED",
+    "OUTPUT_FORMATS",
+    "CliUsageError",
+    "build_parser",
+    "run_cli",
+    "main",
+]

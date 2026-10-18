@@ -1,2 +1,0 @@
-prune tests
-global-exclude .DS_Store

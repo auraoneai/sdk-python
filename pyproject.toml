@@ -4,74 +4,73 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auraone-sdk"
-version = "0.2.1"
-description = "Python SDK and CLI for AuraOne hosted AI evaluations, with sync and async clients for templates, runs, analytics, training, and governance."
+version = "1.0.0"
+description = "Official Python SDK and CLI for the AuraOne API"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "MIT"
-authors = [{ name = "AuraOne" }]
-keywords = [
-  "auraone",
-  "ai-evaluation",
-  "evaluation-api",
-  "hosted-evaluation",
-  "python-sdk",
-  "async-client",
-  "command-line-interface",
-  "model-evaluation",
-  "agent-evaluation",
-  "llm-evaluation",
-  "ai-governance",
-  "graphql-client",
-]
+authors = [{ name = "AuraOne Team", email = "support@auraone.ai" }]
 classifiers = [
-  "Development Status :: 3 - Alpha",
-  "Environment :: Console",
-  "Framework :: AsyncIO",
+  "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
-  "Intended Audience :: Science/Research",
-  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
-  "Topic :: Internet :: WWW/HTTP",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "Topic :: Software Development :: Libraries :: Python Modules",
-  "Topic :: Software Development :: Quality Assurance",
+  "Operating System :: OS Independent",
+]
+keywords = [
+  "auraone",
+  "api",
+  "sdk",
+  "python",
+  "ml",
+  "ai",
+  "training",
+  "analytics",
+  "collaboration",
+  "quality",
+  "safety",
 ]
 dependencies = [
   "httpx>=0.27.0",
 ]
 
 [project.optional-dependencies]
-async = ["httpx[http2]>=0.27.0"]
-dev = [
-  "pytest>=7.0",
-  "pytest-asyncio>=0.23.0",
-  "build>=1.0",
-  "twine>=5.0",
-  "tomli>=2.0; python_version < '3.11'",
+async = ["aiofiles>=0.8.0"]
+# P1-05: federated-learning participant client — CKKS via TenSEAL +
+# ed25519 via cryptography. torch/opacus stay customer-side (too heavy to
+# force on runner images).
+federation = [
+  "cryptography>=42.0.0",
+  "tenseal==0.3.16",
 ]
+dev = [
+  "pytest>=7.0.0",
+  "pytest-asyncio>=0.21.0",
+  "pytest-cov>=4.0.0",
+  "black>=26.3.1",
+  "isort>=5.12.0",
+  "mypy>=1.0.0",
+  "flake8>=6.0.0",
+]
+docs = [
+  "sphinx>=6.0.0",
+  "sphinx-rtd-theme>=1.3.0",
+  "myst-parser>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://auraone.ai"
+Documentation = "https://auraone.ai/developers"
+Source = "https://github.com/auraoneai/AuraOne"
+Issues = "https://github.com/auraoneai/AuraOne/issues"
 
 [project.scripts]
 aura = "aura.cli:main"
 
-[project.urls]
-Homepage = "https://www.auraone.ai/developers"
-Documentation = "https://www.auraone.ai/resources/docs"
-Source = "https://github.com/auraoneai/sdk-python"
-Issues = "https://github.com/auraoneai/sdk-python/issues"
-Changelog = "https://github.com/auraoneai/sdk-python/blob/main/CHANGELOG.md"
-Security = "https://github.com/auraoneai/sdk-python/blob/main/SECURITY.md"
-CI = "https://github.com/auraoneai/sdk-python/actions/workflows/ci.yml"
-PyPI = "https://pypi.org/project/auraone-sdk/"
-Releases = "https://github.com/auraoneai/sdk-python/releases"
-"TypeScript SDK" = "https://www.npmjs.com/package/@auraone/sdk"
-"Local EvalKit" = "https://pypi.org/project/auraone-evalkit/"
-
 [tool.setuptools.packages.find]
-include = ["aura*", "aura_one*"]
-exclude = ["tests*"]
+include = ["aura_one*", "aura*"]
+exclude = ["tests", "tests.*"]

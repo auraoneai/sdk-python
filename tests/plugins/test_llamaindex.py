@@ -5,19 +5,25 @@ class DummyClient:
     def __init__(self):
         self.calls = []
 
-    def run_evaluation(self, payload):
-        self.calls.append(payload)
-        return {"ok": True, "payload": payload}
+    def evaluate(self, template_id, agent_bundle_url, reward_spec_id=None, config=None, wait=True):
+        self.calls.append({
+            "template_id": template_id,
+            "agent_bundle_url": agent_bundle_url,
+            "reward_spec_id": reward_spec_id,
+            "config": config,
+            "wait": wait,
+        })
+        return {"ok": True}
 
 
 def test_llamaindex_plugin_runs():
     client = DummyClient()
     plugin = AuraLlamaIndexPlugin(client)
 
-    result = plugin.run({"foo": "bar"})
+    result = plugin.run({"template_id": "tpl_1", "agent_bundle_url": "https://x/bundle"})
 
     assert result["ok"] is True
-    assert client.calls[0]["foo"] == "bar"
+    assert client.calls[0]["template_id"] == "tpl_1"
 
 
 def test_llamaindex_plugin_uses_callback():
@@ -28,7 +34,7 @@ def test_llamaindex_plugin_uses_callback():
         return {"ok": True}
 
     plugin = AuraLlamaIndexPlugin(client=None, run_callback=hook)
-    result = plugin.run({"baz": 1})
+    result = plugin.run({"template_id": "tpl_1", "agent_bundle_url": "x"})
 
     assert result["ok"] is True
-    assert captured["payload"]["baz"] == 1
+    assert captured["payload"]["template_id"] == "tpl_1"

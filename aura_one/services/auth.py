@@ -13,12 +13,12 @@ class AuthService:
 
     def list_api_keys(self, config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         """List API keys."""
-        return self.http_client.get("/api/auth/api-keys", config=config)
+        return self.http_client.get("/api/v1/api-keys", config=config)
 
     def create_api_key(self, name: str, permissions: List[str], config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         """Create API key."""
         data = {"action": "create", "name": name, "permissions": permissions}
-        return self.http_client.post("/api/auth/api-keys", data=data, config=config)
+        return self.http_client.post("/api/v1/api-keys", data=data, config=config)
 
 
 class AsyncAuthService:
@@ -29,9 +29,9 @@ class AsyncAuthService:
 
     async def list_api_keys(self, config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         """List API keys."""
-        return await self.http_client.get("/api/auth/api-keys", config=config)
+        return await self.http_client.get("/api/v1/api-keys", config=config)
 
     async def create_api_key(self, name: str, permissions: List[str], config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         """Create API key."""
         data = {"action": "create", "name": name, "permissions": permissions}
-        return await self.http_client.post("/api/auth/api-keys", data=data, config=config)
+        return await self.http_client.post("/api/v1/api-keys", data=data, config=config)

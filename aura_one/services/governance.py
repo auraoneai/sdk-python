@@ -19,28 +19,28 @@ class GovernanceService:
         params: Optional[Dict[str, Any]] = None,
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return self.http_client.get("/v1/compliance/frameworks", params=params, config=request_config)
+        return self.http_client.get("/api/v1/compliance/frameworks", params=params, config=request_config)
 
     def create_framework(
         self,
         payload: Dict[str, Any],
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return self.http_client.post("/v1/compliance/frameworks", data=payload, config=request_config)
+        return self.http_client.post("/api/v1/compliance/frameworks", data=payload, config=request_config)
 
     def list_evidence(
         self,
         params: Optional[Dict[str, Any]] = None,
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return self.http_client.get("/v1/compliance/evidence", params=params, config=request_config)
+        return self.http_client.get("/api/v1/compliance/evidence", params=params, config=request_config)
 
     def append_evidence(
         self,
         payload: Dict[str, Any],
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return self.http_client.post("/v1/compliance/evidence", data=payload, config=request_config)
+        return self.http_client.post("/api/v1/compliance/evidence", data=payload, config=request_config)
 
 
 class AsyncGovernanceService:
@@ -54,25 +54,25 @@ class AsyncGovernanceService:
         params: Optional[Dict[str, Any]] = None,
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return await self.http_client.get("/v1/compliance/frameworks", params=params, config=request_config)
+        return await self.http_client.get("/api/v1/compliance/frameworks", params=params, config=request_config)
 
     async def create_framework(
         self,
         payload: Dict[str, Any],
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return await self.http_client.post("/v1/compliance/frameworks", data=payload, config=request_config)
+        return await self.http_client.post("/api/v1/compliance/frameworks", data=payload, config=request_config)
 
     async def list_evidence(
         self,
         params: Optional[Dict[str, Any]] = None,
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return await self.http_client.get("/v1/compliance/evidence", params=params, config=request_config)
+        return await self.http_client.get("/api/v1/compliance/evidence", params=params, config=request_config)
 
     async def append_evidence(
         self,
         payload: Dict[str, Any],
         request_config: Optional[RequestConfig] = None,
     ) -> Dict[str, Any]:
-        return await self.http_client.post("/v1/compliance/evidence", data=payload, config=request_config)
+        return await self.http_client.post("/api/v1/compliance/evidence", data=payload, config=request_config)

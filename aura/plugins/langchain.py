@@ -11,7 +11,7 @@ from typing import Any, Dict, Optional, Callable
 class AuraLangChainPlugin:
     def __init__(self, client: Any, run_callback: Optional[Callable[..., Dict[str, Any]]] = None):
         """
-        client: AuraOne client or transport with a `run_evaluation` method.
+        client: AuraOne client or transport with a `evaluate` method.
         run_callback: Optional hook to override execution (useful for tests).
         """
         self.client = client
@@ -24,10 +24,16 @@ class AuraLangChainPlugin:
         if self.run_callback:
             return self.run_callback(payload)
 
-        if not hasattr(self.client, "run_evaluation"):
-            raise AttributeError("client is missing run_evaluation")
+        if not hasattr(self.client, "evaluate"):
+            raise AttributeError("client is missing evaluate")
 
-        return self.client.run_evaluation(payload)
+        return self.client.evaluate(
+            template_id=payload["template_id"],
+            agent_bundle_url=payload["agent_bundle_url"],
+            reward_spec_id=payload.get("reward_spec_id"),
+            config=payload.get("config"),
+            wait=payload.get("wait", True),
+        )
 
 
 __all__ = ["AuraLangChainPlugin"]

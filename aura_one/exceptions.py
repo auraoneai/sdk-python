@@ -280,6 +280,39 @@ def create_error_from_response(
     code = response_data.get("code")
     details = response_data.get("details")
 
+    # Envelope routes (Enterprise Intelligence and others) nest the error:
+    # {"error": {"code": ..., "message": ..., "details"?: ...}}. Extra keys
+    # (for example graph validation "issues") become the details.
+    if isinstance(message, dict):
+        envelope = message
+        message = envelope.get("message")
+        if not isinstance(message, str):
+            message = default_message
+        nested_code = envelope.get("code")
+        code = nested_code if isinstance(nested_code, str) else code
+        if "details" in envelope:
+            details = envelope.get("details")
+        elif details is None:
+            extra = {
+                key: value
+                for key, value in envelope.items()
+                if key not in ("code", "message", "details")
+            }
+            details = extra or None
+    elif "error" not in response_data and "message" in response_data:
+        candidate = response_data.get("message")
+        if isinstance(candidate, str):
+            message = candidate
+    elif (
+        "error" not in response_data
+        and "message" not in response_data
+        and details is None
+        and response_data
+    ):
+        # Bodies without error fields (for example a 503 health body) are
+        # kept as details so callers can read them.
+        details = dict(response_data)
+
     if status_code == 400:
         return ValidationError(message, code, details)
     elif status_code == 401:

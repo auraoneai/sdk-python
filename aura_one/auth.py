@@ -169,9 +169,16 @@ class AuthProvider:
         Returns:
             True if valid format, False otherwise
         """
-        # AuraOne API keys follow the format: aura_live_xxxx or aura_test_xxxx
-        pattern = r"^aura_(live|test)_[a-zA-Z0-9]{32,}$"
-        return bool(re.match(pattern, api_key))
+        # Platform-issued keys: ak_<8 hex>_<64 hex> (apps/src/lib/security/api-keys.ts).
+        # Compute-issued `aoc_` keys are rejected for platform clients (R2);
+        # use is_compute_api_key to distinguish them for error messages.
+        platform_pattern = r"^ak_[a-f0-9]{8}_[a-f0-9]{64}$"
+        return bool(re.match(platform_pattern, api_key))
+
+    @staticmethod
+    def is_compute_api_key(api_key: str) -> bool:
+        """True when the key is a Compute-authority key (aoc_)."""
+        return bool(re.match(r"^aoc_[a-f0-9]{8}_[A-Za-z0-9_\-]{8,128}$", api_key))
 
     @staticmethod
     def is_valid_jwt_token(token: str) -> bool:

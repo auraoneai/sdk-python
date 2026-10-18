@@ -41,7 +41,19 @@ Error Handling:
 """
 
 from .client import AuraOneClient, AsyncAuraOneClient
-from .graphql import GraphQLClient, AsyncGraphQLClient, GraphQLExecutionError
+from .services.graphql import (
+    GRAPHQL_PERSISTED_QUERIES,
+    AsyncGraphQLClient,
+    AsyncGraphQLService,
+    GraphQLClient,
+    GraphQLExecutionError,
+    GraphQLService,
+)
+from .services.integrations import (
+    SUPPORTED_CONNECTOR_NAMESPACES,
+    AsyncIntegrationsService,
+    IntegrationsService,
+)
 from .exceptions import (
     AuraOneError,
     AuthenticationError,
@@ -57,9 +69,8 @@ from .types import (
     EventCategory,
     TrainingFormat,
 )
-from .version import __version__
+from .version import VERSION, __version__
 
-# Version info
 __api_version__ = "1.0"
 __author__ = "AuraOne Team"
 __email__ = "support@auraone.ai"
@@ -74,6 +85,7 @@ DEFAULT_CONFIG = {
     "debug": False,
 }
 
+
 # Convenience functions
 def with_api_key(api_key: str, **kwargs) -> AuraOneClient:
     """Create AuraOne client with API key authentication.
@@ -86,9 +98,10 @@ def with_api_key(api_key: str, **kwargs) -> AuraOneClient:
         AuraOne client instance
 
     Example:
-        >>> client = with_api_key("aura_live_1234567890abcdef", debug=True)
+        >>> client = with_api_key("ak_" + "a1b2c3d4" + "_" + "0"*64, debug=True)
     """
     return AuraOneClient.with_api_key(api_key, **kwargs)
+
 
 def with_token(token: str, refresh_token: str = None, **kwargs) -> AuraOneClient:
     """Create AuraOne client with JWT token authentication.
@@ -106,6 +119,7 @@ def with_token(token: str, refresh_token: str = None, **kwargs) -> AuraOneClient
     """
     return AuraOneClient.with_token(token, refresh_token, **kwargs)
 
+
 def from_environment(**kwargs) -> AuraOneClient:
     """Create AuraOne client from environment variables.
 
@@ -120,6 +134,7 @@ def from_environment(**kwargs) -> AuraOneClient:
     """
     return AuraOneClient.from_environment(**kwargs)
 
+
 # Async versions
 def async_with_api_key(api_key: str, **kwargs) -> AsyncAuraOneClient:
     """Create async AuraOne client with API key authentication.
@@ -132,11 +147,14 @@ def async_with_api_key(api_key: str, **kwargs) -> AsyncAuraOneClient:
         Async AuraOne client instance
 
     Example:
-        >>> client = async_with_api_key("aura_live_1234567890abcdef", debug=True)
+        >>> client = async_with_api_key("ak_" + "a1b2c3d4" + "_" + "0"*64, debug=True)
     """
     return AsyncAuraOneClient.with_api_key(api_key, **kwargs)
 
-def async_with_token(token: str, refresh_token: str = None, **kwargs) -> AsyncAuraOneClient:
+
+def async_with_token(
+    token: str, refresh_token: str = None, **kwargs
+) -> AsyncAuraOneClient:
     """Create async AuraOne client with JWT token authentication.
 
     Args:
@@ -152,6 +170,7 @@ def async_with_token(token: str, refresh_token: str = None, **kwargs) -> AsyncAu
     """
     return AsyncAuraOneClient.with_token(token, refresh_token, **kwargs)
 
+
 def async_from_environment(**kwargs) -> AsyncAuraOneClient:
     """Create async AuraOne client from environment variables.
 
@@ -165,6 +184,7 @@ def async_from_environment(**kwargs) -> AsyncAuraOneClient:
         >>> client = async_from_environment(timeout=45.0, max_retries=5)
     """
     return AsyncAuraOneClient.from_environment(**kwargs)
+
 
 # Validation utilities
 def is_valid_api_key(api_key: str) -> bool:
@@ -183,7 +203,9 @@ def is_valid_api_key(api_key: str) -> bool:
         ...     print("Invalid API key format")
     """
     from .auth import AuthProvider
+
     return AuthProvider.is_valid_api_key(api_key)
+
 
 def is_valid_jwt_token(token: str) -> bool:
     """Validate JWT token format.
@@ -201,16 +223,23 @@ def is_valid_jwt_token(token: str) -> bool:
         ...     print("Invalid JWT token format")
     """
     from .auth import AuthProvider
+
     return AuthProvider.is_valid_jwt_token(token)
+
 
 # Export everything
 __all__ = [
     # Main classes
     "AuraOneClient",
     "AsyncAuraOneClient",
+    "GraphQLService",
+    "AsyncGraphQLService",
     "GraphQLClient",
     "AsyncGraphQLClient",
-
+    "IntegrationsService",
+    "AsyncIntegrationsService",
+    "SUPPORTED_CONNECTOR_NAMESPACES",
+    "GRAPHQL_PERSISTED_QUERIES",
     # Exceptions
     "AuraOneError",
     "AuthenticationError",
@@ -218,7 +247,6 @@ __all__ = [
     "ValidationError",
     "NotFoundError",
     "GraphQLExecutionError",
-
     # Types
     "ClientConfig",
     "AnalyticsEvent",
@@ -226,7 +254,6 @@ __all__ = [
     "APIKey",
     "EventCategory",
     "TrainingFormat",
-
     # Convenience functions
     "with_api_key",
     "with_token",
@@ -234,12 +261,11 @@ __all__ = [
     "async_with_api_key",
     "async_with_token",
     "async_from_environment",
-
     # Validation utilities
     "is_valid_api_key",
     "is_valid_jwt_token",
-
     # Constants
     "DEFAULT_CONFIG",
+    "VERSION",
     "__version__",
 ]

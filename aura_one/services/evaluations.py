@@ -30,14 +30,14 @@ class EvaluationsService:
             payload["reward_spec_id"] = reward_spec_id
         if config:
             payload["config"] = config
-        return self.http_client.post("/v1/evaluations", data=payload, config=request_config)
+        return self.http_client.post("/api/v1/evaluations", data=payload, config=request_config)
 
     def get(self, evaluation_id: str, request_config: Optional[RequestConfig] = None) -> Dict[str, Any]:
-        return self.http_client.get(f"/v1/evaluations/{evaluation_id}", config=request_config)
+        return self.http_client.get(f"/api/v1/evaluations/{evaluation_id}", config=request_config)
 
     def cancel(self, evaluation_id: str, request_config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         return self.http_client.post(
-            f"/v1/evaluations/{evaluation_id}:cancel",
+            f"/api/v1/evaluations/{evaluation_id}/cancel",
             config=request_config,
         )
 
@@ -55,26 +55,10 @@ class EvaluationsService:
             params["page"] = page
         if per_page is not None:
             params["per_page"] = per_page
-        response = self.http_client.get("/v1/templates", params=params or None, config=request_config)
+        response = self.http_client.get("/api/v1/templates", params=params or None, config=request_config)
         if isinstance(response, list):
             return response
         return response.get("templates") or response.get("data") or []
-
-    def list_reward_specs(
-        self,
-        page: Optional[int] = None,
-        per_page: Optional[int] = None,
-        request_config: Optional[RequestConfig] = None,
-    ) -> List[Dict[str, Any]]:
-        params: Dict[str, Any] = {}
-        if page is not None:
-            params["page"] = page
-        if per_page is not None:
-            params["per_page"] = per_page
-        response = self.http_client.get("/v1/rewards/specs", params=params or None, config=request_config)
-        if isinstance(response, list):
-            return response
-        return response.get("specs") or response.get("data") or []
 
 
 class AsyncEvaluationsService:
@@ -99,14 +83,14 @@ class AsyncEvaluationsService:
             payload["reward_spec_id"] = reward_spec_id
         if config:
             payload["config"] = config
-        return await self.http_client.post("/v1/evaluations", data=payload, config=request_config)
+        return await self.http_client.post("/api/v1/evaluations", data=payload, config=request_config)
 
     async def get(self, evaluation_id: str, request_config: Optional[RequestConfig] = None) -> Dict[str, Any]:
-        return await self.http_client.get(f"/v1/evaluations/{evaluation_id}", config=request_config)
+        return await self.http_client.get(f"/api/v1/evaluations/{evaluation_id}", config=request_config)
 
     async def cancel(self, evaluation_id: str, request_config: Optional[RequestConfig] = None) -> Dict[str, Any]:
         return await self.http_client.post(
-            f"/v1/evaluations/{evaluation_id}:cancel",
+            f"/api/v1/evaluations/{evaluation_id}/cancel",
             config=request_config,
         )
 
@@ -124,23 +108,8 @@ class AsyncEvaluationsService:
             params["page"] = page
         if per_page is not None:
             params["per_page"] = per_page
-        response = await self.http_client.get("/v1/templates", params=params or None, config=request_config)
+        response = await self.http_client.get("/api/v1/templates", params=params or None, config=request_config)
         if isinstance(response, list):
             return response
         return response.get("templates") or response.get("data") or []
 
-    async def list_reward_specs(
-        self,
-        page: Optional[int] = None,
-        per_page: Optional[int] = None,
-        request_config: Optional[RequestConfig] = None,
-    ) -> List[Dict[str, Any]]:
-        params: Dict[str, Any] = {}
-        if page is not None:
-            params["page"] = page
-        if per_page is not None:
-            params["per_page"] = per_page
-        response = await self.http_client.get("/v1/rewards/specs", params=params or None, config=request_config)
-        if isinstance(response, list):
-            return response
-        return response.get("specs") or response.get("data") or []
