@@ -1,11 +1,10 @@
-from typing import Optional, Dict, Any, List, Callable
+from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 from enum import Enum
 import time
 import uuid
 import os
 import secrets
-import base64
 import warnings
 import httpx
 from httpx import HTTPError, TimeoutException
