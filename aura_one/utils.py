@@ -3,7 +3,7 @@
 import asyncio
 import json
 import time
-from typing import Dict, Any, Optional, Union, Protocol, runtime_checkable
+from typing import Dict, Any, Optional, Protocol, runtime_checkable
 from urllib.parse import urljoin, urlencode
 
 import httpx
