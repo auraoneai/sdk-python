@@ -1,6 +1,49 @@
 # AuraOne Python SDK
 
-Official Python SDK (`auraone-sdk`) for the AuraOne public API.
+Python SDK for AuraOne AI evaluation workflows: typed sync and async clients and the `aura` CLI for the hosted AuraOne API.
+
+[![PyPI](https://img.shields.io/pypi/v/auraone-sdk)](https://pypi.org/project/auraone-sdk/)
+[![CI](https://github.com/auraoneai/sdk-python/actions/workflows/ci.yml/badge.svg)](https://github.com/auraoneai/sdk-python/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/auraoneai/sdk-python/blob/main/LICENSE)
+
+## Quick start
+```bash
+pip install auraone-sdk
+export AURAONE_API_KEY="ak_..."   # platform-issued key; never hard-code it
+```
+
+```python
+import os
+from aura_one import AuraOneClient
+from aura_one.types import ClientConfig
+client = AuraOneClient(ClientConfig(api_key=os.environ["AURAONE_API_KEY"]))
+templates = client.evaluations.list_templates()
+```
+
+## What it does
+
+- Calls the hosted AuraOne API at `https://api.auraone.ai` with a
+  platform-issued `ak_` API key.
+- Lists evaluation templates and creates, polls, and cancels evaluations
+  (`client.evaluations`).
+- Ships an async client (`AsyncAuraOneClient`) with the same methods.
+- Installs the `aura` CLI (`aura evaluate`, `aura list-templates`,
+  `aura quotas`, `aura system-health`).
+- Covers the Enterprise Intelligence routes (`client.enterprise_intelligence`).
+
+## What it doesn't do
+
+- It does not run evaluations locally; the work runs on the AuraOne platform.
+- Launch-excluded surfaces (compute, GraphQL, robotics, synthetic research,
+  rewards) are not part of this SDK.
+- It does not pick the tenant: the organization is always derived from the
+  API key server-side.
+
+## Build on AuraOne
+
+- [Python SDK](https://auraone.ai/open/sdk-python)
+- [TypeScript SDK](https://auraone.ai/open/sdk-typescript)
+- [Self-hosted GitHub App](https://auraone.ai/open/github-app)
 
 ## Installation
 
@@ -36,7 +79,7 @@ client = AuraOneClient(
 )
 ```
 
-## Quickstart
+## Evaluations
 
 ```python
 # List templates
@@ -45,6 +88,7 @@ templates = client.evaluations.list_templates()
 # Create an evaluation — config.inputs is required
 evaluation = client.evaluations.create(
     template_id="tpl_your_template",
+    agent_bundle_url="https://example.com/agent.tar.gz",
     config={"inputs": [{"prompt": "example", "expected": "answer"}]},
 )
 
@@ -174,3 +218,7 @@ routes and run creation only.
   CSRF-protected.
 - Launch-excluded surfaces (compute, GraphQL, robotics, synthetic research,
   rewards) are not part of this SDK.
+
+---
+
+Move from a prototype to a production AuraOne integration. [Talk to AuraOne](https://auraone.ai/contact?from=open:python-sdk)
